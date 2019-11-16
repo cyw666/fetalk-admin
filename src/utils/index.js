@@ -107,3 +107,62 @@ export function param2Obj(url) {
       '"}'
   )
 }
+
+/**
+ * Add class to element
+ * @param {HTMLElement} elm
+ * @param {string} cls
+ */
+export function addClass(ele, cls) {
+  if (!hasClass(ele, cls)) ele.className += ' ' + cls
+}
+
+/**
+ * Remove class from element
+ * @param {HTMLElement} elm
+ * @param {string} cls
+ */
+export function removeClass(ele, cls) {
+  if (hasClass(ele, cls)) {
+    const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
+    ele.className = ele.className.replace(reg, ' ')
+  }
+}
+
+/**
+ *
+ * @desc 设置样式
+ * @param {HTMLElement} dom
+ * @param {Object} styleObj
+ * @returns
+ */
+export function setStyle(dom, styleObj) {
+  if (!dom || !styleObj || JSON.stringify(styleObj) === '{}') return
+  for (let key in styleObj) {
+    // dom 可能是一个数组，也可能是一个DOM 对象
+    if (dom.length) {
+      for (var i = 0, len = dom.length; i < len; i++) {
+        dom[i].style[key] = styleObj[key]
+      }
+    } else {
+      dom.style[key] = styleObj[key]
+    }
+  }
+}
+
+/**
+ * @desc 移除对象中空值
+ * @param {*} obj
+ * @param {*} recurse 是否递归
+ */
+export function deleteEmpty(obj, recurse = false) {
+  if (!obj) return
+  for (var i in obj) {
+    if (obj[i] === '' || obj[i] === null || obj[i] === undefined) {
+      delete obj[i]
+    } else if (recurse && typeof obj[i] === 'object') {
+      deleteEmpty(obj[i], recurse)
+    }
+  }
+  return obj
+}

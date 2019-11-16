@@ -1,29 +1,17 @@
 'use strict'
 const path = require('path')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const defaultSettings = require('./src/settings.js')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Admin Template' // page title
+const name = defaultSettings.title || 'Vue-Admin' // page title
 
-// If your port is set to 80,
-// use administrator privileges to execute the command line.
-// For example, Mac: sudo npm run
-// You can change the port by the following methods:
-// port = 8080 npm run dev OR npm run dev --port = 8080
 const port = process.env.port || process.env.npm_config_port || 8080 // dev port
 
-// All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
-  /**
-   * You will need to set publicPath if you plan to deploy your site under a sub path,
-   * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
-   * then publicPath should be set to "/bar/".
-   * In most cases please use '/' !!!
-   * Detail: https://cli.vuejs.org/config/#publicpath
-   */
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
@@ -49,20 +37,19 @@ module.exports = {
     },
     after: require('./mock/mock-server.js'),
   },
-  configureWebpack: {
-    // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
-    name: name,
-    resolve: {
-      alias: {
-        '@': resolve('src'),
-      },
-    },
+  configureWebpack: config => {
+    config.name = name
+    const plugins = []
+    plugins.push(
+      new LodashModuleReplacementPlugin({
+        collections: true,
+        shorthands: true,
+        chaining: true,
+      })
+    )
+    config.plugins = [...config.plugins, ...plugins]
   },
   chainWebpack(config) {
-    config.plugins.delete('preload') // TODO: need test
-    config.plugins.delete('prefetch') // TODO: need test
-
     // set svg-sprite-loader
     config.module
       .rule('svg')
@@ -91,11 +78,10 @@ module.exports = {
       })
       .end()
 
-    config
-      // https://webpack.js.org/configuration/devtool/#development
-      .when(process.env.NODE_ENV === 'development', config =>
-        config.devtool('cheap-source-map')
-      )
+    // https://webpack.js.org/configuration/devtool/#development
+    // config.when(process.env.NODE_ENV === 'development', config =>
+    //   config.devtool('cheap-source-map')
+    // )
 
     config.when(process.env.NODE_ENV !== 'development', config => {
       config

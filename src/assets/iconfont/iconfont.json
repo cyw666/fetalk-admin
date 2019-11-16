@@ -1,0 +1,58 @@
+{
+  "id": "1431283",
+  "name": "Innosource-admin",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "Innosource后台管理",
+  "glyphs": [
+    {
+      "icon_id": "30437",
+      "name": "send",
+      "font_class": "send",
+      "unicode": "e675",
+      "unicode_decimal": 58997
+    },
+    {
+      "icon_id": "1546561",
+      "name": "发布",
+      "font_class": "fabu",
+      "unicode": "e68f",
+      "unicode_decimal": 59023
+    },
+    {
+      "icon_id": "1831605",
+      "name": "企业简介",
+      "font_class": "qiyejianjie",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "3248700",
+      "name": "日志",
+      "font_class": "rizhi",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "4734154",
+      "name": "权限",
+      "font_class": "ic_opt_feature",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "6260268",
+      "name": "标签",
+      "font_class": "biaoqian",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "6783204",
+      "name": "用户",
+      "font_class": "yiliaohangyedeICON-",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    }
+  ]
+}
