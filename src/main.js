@@ -13,6 +13,7 @@ import router from '@/router'
 import mixins from '@/mixins'
 import * as filters from '@/filters' // global filters
 import adaptiveTable from '@/directive/adaptive-table'
+import globalRegistration from '@/utils/global-registration'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -29,6 +30,7 @@ import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
+globalRegistration(Vue)
 Vue.use(adaptiveTable.install)
 Vue.use(mixins)
 Object.keys(filters).forEach(key => {
