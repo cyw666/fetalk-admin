@@ -61,6 +61,12 @@
           </template>
         </el-table-column>
       </el-table>
+      <pagination
+        :total="total"
+        :page.sync="searchOptions.page"
+        :perPage.sync="searchOptions.perPage"
+        @pagination="paginationChanges"
+      />
     </page-container>
   </div>
 </template>
@@ -101,8 +107,14 @@ export default {
   },
   data() {
     return {
+      total: 0,
       list: null,
       listLoading: true,
+      searchOptions: {
+        role: '',
+        page: 1,
+        perPage: 10,
+      },
     }
   },
   computed: {
@@ -120,10 +132,15 @@ export default {
       try {
         const response = await getList(params)
         this.list = response.data.items
+        this.total = response.data.total
         this.listLoading = false
       } catch (error) {
         console.warn(error)
       }
+    },
+    paginationChanges(options) {
+      debugger
+      this.getData(options)
     },
     //定义导出Excel表格事件
     exportExcel() {

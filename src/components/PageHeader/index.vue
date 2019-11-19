@@ -18,11 +18,12 @@ export default {
 <style lang="scss">
 .page-header {
   background: #fff;
-  padding: 18px 0 18px;
+  // padding: 18px 0 18px;
   &__body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 10px;
   }
 }
 </style>
