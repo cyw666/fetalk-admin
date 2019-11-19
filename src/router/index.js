@@ -90,6 +90,19 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: '/introduction',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'index',
+        name: 'Introduction',
+        component: () => import('@/views/introduction/index'),
+        meta: { title: '公司简介', icon: 'dashboard' },
+      },
+    ],
+  },
   // {
   //   path: 'external-link',
   //   component: Layout,
