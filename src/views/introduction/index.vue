@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+// import _ from 'lodash'
 // import { getAbout, setAbout } from '@/services/about'
 import { validPhone, validTel, validEmail } from '@/utils/validate'
 export default {
@@ -108,6 +108,7 @@ export default {
     async save() {
       const text = this.introductionRichText.getText()
       this.formData.introduction.text = text
+      console.log(this.formData)
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.setAbout()

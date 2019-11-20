@@ -109,6 +109,16 @@ export function param2Obj(url) {
 }
 
 /**
+ * Check if an element has a class
+ * @param {HTMLElement} elm
+ * @param {string} cls
+ * @returns {boolean}
+ */
+export function hasClass(ele, cls) {
+  return !!ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'))
+}
+
+/**
  * Add class to element
  * @param {HTMLElement} elm
  * @param {string} cls

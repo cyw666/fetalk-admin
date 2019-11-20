@@ -42,7 +42,7 @@
 
 <script>
 import _ from 'lodash'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import { removeToken } from '@/utils/token'
 
 export default {
