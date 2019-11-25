@@ -18,7 +18,7 @@ export default {
     margin-bottom: 8px;
   }
   &__body {
-    background: #fff;
+    background: $--color-white;
   }
 }
 </style>

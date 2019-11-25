@@ -17,7 +17,7 @@ export default {
 
 <style lang="scss">
 .page-header {
-  background: #fff;
+  background: $--color-white;
   // padding: 18px 0 18px;
   &__body {
     display: flex;

@@ -5,9 +5,7 @@ const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
 const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 const defaultSettings = require('./src/settings.js')
 
-function resolve(dir) {
-  return path.join(__dirname, dir)
-}
+const resolve = dir => path.join(__dirname, dir)
 
 const name = defaultSettings.title || 'Vue-Admin' // page title
 
@@ -58,6 +56,16 @@ module.exports = {
       })
     )
     config.plugins = [...config.plugins, ...plugins]
+  },
+  css: {
+    loaderOptions: {
+      sass: {
+        prependData: `
+          @import "~@/styles/variables.scss";
+          @import "~@/styles/mixin.scss";
+        `,
+      },
+    },
   },
   chainWebpack(config) {
     // Vue CLI通常使用自己的加载器来加载.svg和.css文件，但是:
@@ -116,10 +124,9 @@ module.exports = {
       .end()
 
     // https://webpack.js.org/configuration/devtool/#development
-    config.when(process.env.NODE_ENV === 'development', config =>
-      // config.devtool('cheap-source-map')
-      config.devtool('source-map')
-    )
+    // config.when(process.env.NODE_ENV === 'development', config =>
+    //   config.devtool('source-map')
+    // )
 
     config.when(process.env.NODE_ENV !== 'development', config => {
       config

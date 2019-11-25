@@ -134,7 +134,7 @@ export default {
 .change-password {
   &__wrapper {
     height: calc(100vh - 70px);
-    background: #fff;
+    background: $--color-white;
     display: flex;
     justify-content: center;
     align-items: center;
