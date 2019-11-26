@@ -161,10 +161,12 @@ export default {
         'display_time',
       ]
       const data = this.formatJson(filterVal, this.list)
-      export_json_to_excel({
-        header: tHeader,
-        data,
-        filename: 'user-list',
+      import('@/vendor/Export2Excel').then(excel => {
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'user-list',
+        })
       })
     },
     formatJson(filterVal, jsonData) {
