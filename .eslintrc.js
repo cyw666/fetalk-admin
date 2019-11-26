@@ -9,6 +9,13 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-unused-vars': [
+      2,
+      {
+        vars: 'all',
+        args: 'none',
+      },
+    ],
     semi: 0,
     'prettier/prettier': [
       'error',

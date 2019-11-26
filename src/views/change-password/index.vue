@@ -121,7 +121,7 @@ export default {
         await this.changePassword({ id: this.userId, params })
         this.$message.success('修改密码成功')
         removeToken()
-        this.$router.push('/auth/login')
+        this.$router.push('/login')
       } catch (error) {
         this.$message.error(error.message)
       }

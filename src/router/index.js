@@ -32,6 +32,17 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path*',
+        component: () => import('@/views/redirect/index'),
+      },
+    ],
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true,
@@ -56,12 +67,13 @@ export const constantRoutes = [
       },
     ],
   },
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true },
+]
+export const asyncRoutes = [
   {
     path: '/users',
     component: Layout,
-    redirect: '/users/users-list',
-    name: 'Users',
-    meta: { title: '用户', icon: 'user' },
     children: [
       {
         path: 'users-list',
@@ -93,7 +105,6 @@ export const constantRoutes = [
   {
     path: '/introduction',
     component: Layout,
-    redirect: '/dashboard',
     children: [
       {
         path: 'index',
@@ -113,11 +124,7 @@ export const constantRoutes = [
   //     },
   //   ],
   // },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true },
 ]
-
 const createRouter = () =>
   new Router({
     // mode: 'history', // require service support
