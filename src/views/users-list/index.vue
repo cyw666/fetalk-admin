@@ -73,7 +73,7 @@
 
 <script>
 import _ from 'lodash'
-import { export_json_to_excel } from '@/vendor/Export2Excel'
+// import { export_json_to_excel } from '@/vendor/Export2Excel'
 import { getList } from '@/api/table'
 const typeOptionsInSearchForm = [
   {
