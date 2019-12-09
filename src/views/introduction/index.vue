@@ -27,11 +27,7 @@
           <el-input v-model="formData.wechat" placeholder="请填写微信号" />
         </el-form-item>
         <el-form-item label="简介" prop="introduction">
-          <editor
-            ref="introductionRichText"
-            v-model="formData.introduction.html"
-            :height="260"
-          />
+          <quill-editor v-model="formData.introduction.html"></quill-editor>
         </el-form-item>
       </el-form>
     </page-container>
@@ -87,11 +83,6 @@ export default {
       },
     }
   },
-  computed: {
-    introductionRichText() {
-      return this.$refs.introductionRichText
-    },
-  },
   created() {
     this.getAbout()
   },
@@ -106,8 +97,6 @@ export default {
       }
     },
     async save() {
-      const text = this.introductionRichText.getText()
-      this.formData.introduction.text = text
       console.log(this.formData)
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
