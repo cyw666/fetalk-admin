@@ -1,217 +1,127 @@
 <template>
-  <div class="ckeditor">
-    <ckeditor
-      :editor="editor"
-      v-model="editorData"
-      :config="editorConfig"
-      :disabled="disabled"
-      @ready="onEditorReady"
-      @focus="$emit('focus')"
-      @blur="$emit('blur')"
-      @input="$emit('change')"
-      @destroy="$emit('destroy')"
-    ></ckeditor>
-  </div>
+  <div ref="editor"></div>
 </template>
 
 <script>
-// import Vue from 'vue'
-import CKEditor from '@ckeditor/ckeditor5-vue'
-import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
-
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import Heading from '@ckeditor/ckeditor5-heading/src/heading'
-import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold'
-import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic'
-import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials'
-import Link from '@ckeditor/ckeditor5-link/src/link'
-import List from '@ckeditor/ckeditor5-list/src/list'
-import Image from '@ckeditor/ckeditor5-image/src/image'
-import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar'
-import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption'
-import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle'
-import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload'
-import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote'
-import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment'
-import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight' // Coloring text background
-import Font from '@ckeditor/ckeditor5-font/src/font'
-import FontFamily from '@ckeditor/ckeditor5-font/src/fontfamily'
-import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed'
-import Table from '@ckeditor/ckeditor5-table/src/table'
-import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar'
-import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter'
-import viewToPlainText from '@ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext'
-
+import Quill from 'quill'
+import 'quill/dist/quill.snow.css'
 export default {
   name: 'Editor',
-  components: {
-    ckeditor: CKEditor.component,
-  },
   props: {
     value: {
       type: String,
+      required: true,
       default: '',
     },
     disabled: {
       type: Boolean,
       default: false,
     },
-    language: {
-      type: String,
-      default: 'zh-cn',
+    height: {
+      type: Number,
     },
-    placeholder: {
-      type: String,
-      default: '请输入内容...',
+    options: {
+      type: Object,
+      required: false,
+      default: () => ({}),
     },
   },
   data() {
     return {
-      editor: ClassicEditor,
-      editorData: this.value,
-      editorConfig: {
-        // The configuration of the editor.
-        language: this.language,
-        placeholder: this.placeholder,
-        plugins: [
-          Essentials,
-          Bold,
-          Italic,
-          Paragraph,
-          Heading,
-          Alignment,
-          Image,
-          ImageToolbar,
-          ImageCaption,
-          ImageStyle,
-          ImageUpload,
-          Link,
-          List,
-          BlockQuote,
-          Highlight,
-          Font,
-          FontFamily,
-          MediaEmbed,
-          Table,
-          TableToolbar,
-          Base64UploadAdapter,
-        ],
-        toolbar: {
-          items: [
-            'heading',
-            '|',
-            'undo',
-            'redo',
-            '|',
-            'fontFamily',
-            'fontSize',
-            'fontColor',
-            'fontBackgroundColor',
-            '|',
-            'alignment',
-            'bold',
-            'italic',
-            'link',
-            'blockquote',
-            '|',
-            'bulletedList',
-            'numberedList',
-            '|',
-            'imageStyle:full',
-            'imageStyle:side',
-            'imageTextAlternative',
-            '|',
-            'imageUpload',
-            '|',
-            'highlight',
-            'mediaEmbed',
-            'insertTable',
+      Quill: undefined,
+      currentValue: '',
+
+      defaultOptions: {
+        theme: 'snow',
+        bounds: document.body,
+        debug: 'warn',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ script: 'sub' }, { script: 'super' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ direction: 'rtl' }],
+            [{ size: ['small', false, 'large', 'huge'] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ color: [] }, { background: [] }],
+            [{ font: [] }],
+            [{ align: [] }],
+            ['clean'],
+            ['link', 'image'],
           ],
         },
-        heading: {
-          options: [
-            {
-              model: 'paragraph',
-              title: 'Paragraph',
-              class: 'ck-heading_paragraph',
-            },
-            {
-              model: 'heading1',
-              view: 'h1',
-              title: 'Heading 1',
-              class: 'ck-heading_heading1',
-            },
-            {
-              model: 'heading2',
-              view: 'h2',
-              title: 'Heading 2',
-              class: 'ck-heading_heading2',
-            },
-            {
-              model: 'heading3',
-              view: 'h3',
-              title: 'Heading 3',
-              class: 'ck-heading_heading3',
-            },
-          ],
-        },
-        table: {
-          contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
-        },
-        highlight: {
-          options: [
-            {
-              model: 'greenMarker',
-              class: 'marker-green',
-              title: 'Green marker',
-              color: 'var(--ck-highlight-marker-green)',
-              type: 'marker',
-            },
-            {
-              model: 'redPen',
-              class: 'pen-red',
-              title: 'Red pen',
-              color: 'var(--ck-highlight-pen-red)',
-              type: 'pen',
-            },
-          ],
-        },
-        // ckfinder: {
-        //   uploadUrl: 'http://example.com',
-        // },
+        placeholder: '书写你的内容',
+        readOnly: this.disabled,
       },
-      editorClass: null,
     }
   },
-  watch: {
-    value(newValue) {
-      this.editorData = newValue
-    },
-    editorData(newValue) {
-      this.$emit('input', newValue)
-    },
+  mounted() {
+    this.init()
+  },
+  beforeDestroy() {
+    this.Quill = null
+    delete this.Quill
   },
   methods: {
-    onEditorReady(editor) {
-      this.editorClass = editor
-      this.$emit('ready', editor)
+    init() {
+      // Options
+      const _options = Object.assign({}, this.defaultOptions, this.options)
+      const editor = this.$refs.editor
+      // 初始化编辑器
+      this.Quill = new Quill(editor, _options)
+      // 默认值
+      this.Quill.pasteHTML(this.currentValue)
+      this.height && this.setHeight(this.height)
+      // 绑定事件
+      this.Quill.on('text-change', (delta, oldDelta, source) => {
+        const html = this.$refs.editor.children[0].innerHTML
+        const text = this.Quill.getText()
+        const quill = this.Quill
+        // 更新内部的值
+        this.currentValue = html
+        // 发出事件 v-model
+        this.$emit('input', html)
+        // 发出事件
+        this.$emit('change', { html, text, quill })
+      })
+
+      this.Quill.on('selection-change', (range, oldRange, source) => {
+        if (!range) {
+          this.$emit('blur', this.Quill)
+        } else {
+          this.$emit('focus', this.Quill)
+        }
+      })
+
+      // Emit ready event
+      this.$emit('ready', this.quill)
     },
-    getText() {
-      const text = viewToPlainText(
-        this.editorClass.editing.view.document.getRoot()
-      )
-      return text
+    setHeight(height) {
+      this.Quill.container.style.height = `${height}px`
+    },
+  },
+  watch: {
+    value: {
+      handler(val) {
+        // 确认是新的值
+        if (val !== this.currentValue) {
+          this.currentValue = val
+          // 尝试更新
+          if (this.Quill) {
+            this.Quill.pasteHTML(this.value)
+          }
+        }
+      },
+      immediate: true,
+    },
+    // Watch disabled change
+    disabled(newVal, oldVal) {
+      if (this.Quill) {
+        this.Quill.enable(!newVal)
+      }
     },
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.ckeditor {
-  ::v-deep {
-    .ck-content {
-      min-height: 350px;
-    }
-  }
-}
-</style>
