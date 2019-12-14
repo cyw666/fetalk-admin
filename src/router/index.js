@@ -67,8 +67,6 @@ export const constantRoutes = [
       },
     ],
   },
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true },
 ]
 export const asyncRoutes = [
   {
@@ -137,16 +135,18 @@ export const asyncRoutes = [
       },
     ],
   },
-  // {
-  //   path: 'external-link',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-  //       meta: { title: 'External Link', icon: 'link' },
-  //     },
-  //   ],
-  // },
+  {
+    path: 'external-link',
+    component: Layout,
+    children: [
+      {
+        path: 'https://github.com/cyw666/fetalk-admin',
+        meta: { title: 'External Link', icon: 'link' },
+      },
+    ],
+  },
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true },
 ]
 const createRouter = () =>
   new Router({
