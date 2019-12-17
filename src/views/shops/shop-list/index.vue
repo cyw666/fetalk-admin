@@ -328,7 +328,9 @@ export default {
           .catch(error => {
             this.$message.error(error.message)
           })
-      } catch (error) {}
+      } catch (error) {
+        console.warn(error)
+      }
     },
     openDialog(type, item) {
       this.showDialog = true
