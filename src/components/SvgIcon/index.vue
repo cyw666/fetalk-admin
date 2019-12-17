@@ -25,6 +25,11 @@ export default {
       type: String,
       default: '',
     },
+    color: {
+      type: String,
+      default: '',
+      required: false,
+    },
   },
   computed: {
     isExternal() {
@@ -33,11 +38,14 @@ export default {
     iconName() {
       return `#icon-${this.iconClass}`
     },
+    colorClass() {
+      return this.color ? `svg-icon icon-${this.color}` : ''
+    },
     svgClass() {
       if (this.className) {
-        return 'svg-icon ' + this.className
+        return `svg-icon ${this.colorClass} ${this.className}`
       } else {
-        return 'svg-icon'
+        return `svg-icon ${this.colorClass}`
       }
     },
     styleExternalIcon() {
@@ -50,7 +58,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 .svg-icon {
   width: 1em;
   height: 1em;
@@ -63,5 +71,20 @@ export default {
   background-color: currentColor;
   mask-size: cover !important;
   display: inline-block;
+}
+.icon-default {
+  color: $--icon-color;
+}
+.icon-primary {
+  color: $--color-primary;
+}
+.icon-success {
+  color: $--color-success;
+}
+.icon-warning {
+  color: $--color-warning;
+}
+.icon-danger {
+  color: $--color-danger;
 }
 </style>

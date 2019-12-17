@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import variables from '@/styles/variables.scss'
 import defaultSettings from '@/settings'
 
@@ -13,7 +14,7 @@ const state = {
 
 const mutations = {
   CHANGE_SETTING: (state, { key, value }) => {
-    if (state.hasOwnProperty(key)) {
+    if (_.has(state, key)) {
       state[key] = value
     }
   },

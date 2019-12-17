@@ -1,70 +1,57 @@
 <template>
-  <div class="table-wrapper">
+  <div class="user-list-wrapper">
     <page-header>
       <search-bar :forms="searchFormOptions" :submit-handler="getData" />
-      <template v-slot:right>
+      <!-- <template v-slot:right>
         <el-button type="primary" @click="exportExcel">
           <i class="el-icon-download"></i>
           导出
         </el-button>
-      </template>
+      </template> -->
     </page-header>
     <page-container>
       <el-table
         v-loading="listLoading"
+        v-adaptive-table
         :data="list"
         element-loading-text="Loading"
-        v-adaptive-table
         height="450"
       >
-        <el-table-column align="center" label="Index" width="95">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
-        <el-table-column label="Title">
-          <template slot-scope="scope">
-            {{ scope.row.title }}
-          </template>
-        </el-table-column>
-        <el-table-column label="Author" width="110" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.author }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="Pageviews" width="110" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.pageviews }}
-          </template>
-        </el-table-column>
         <el-table-column
-          class-name="status-col"
-          label="Status"
-          width="110"
+          type="index"
           align="center"
-        >
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.status | statusFilter">{{
-              scope.row.status
-            }}</el-tag>
+          label="序号"
+          width="100"
+        ></el-table-column>
+        <el-table-column label="昵称" width="150">
+          <template slot-scope="{ row }">
+            <span>{{ row.nickname }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          prop="created_at"
-          label="Display_time"
-          width="200"
-        >
-          <template slot-scope="scope">
-            <i class="el-icon-time" />
-            <span>{{ scope.row.display_time }}</span>
+        <el-table-column label="头像">
+          <template slot-scope="{ row }">
+            <el-image
+              style="width: 50px; height: 50px"
+              :src="row.avatarUrl"
+              fit="contain"
+            ></el-image>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="150">
+          <template slot-scope="{ row }">
+            <span>{{ getConstName(row.status, USERSTATE) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" width="150" align="center">
+          <template slot-scope="{ row }">
+            {{ row.createdAt | dateFormat('YYYY-MM-DD HH:mm:ss') }}
           </template>
         </el-table-column>
       </el-table>
       <pagination
         :total="total"
         :page.sync="searchOptions.page"
-        :perPage.sync="searchOptions.perPage"
+        :per-page.sync="searchOptions.perPage"
         @pagination="paginationChanges"
       />
     </page-container>
@@ -74,24 +61,15 @@
 <script>
 import _ from 'lodash'
 // import { export_json_to_excel } from '@/vendor/Export2Excel'
-import { getList } from '@/api/table'
+import { getUsers } from '@/api/user'
+import { USERSTATE } from '@/utils/constants'
 const typeOptionsInSearchForm = [
   {
-    prop: 'role',
-    label: '用户角色',
-    itemType: 'select',
+    prop: 'keyWord',
+    label: '',
+    itemType: 'input',
     itemWidth: 200,
-    placeholder: '请选择用户角色',
-    options: [
-      {
-        label: '普通用户',
-        value: 'USER',
-      },
-      {
-        label: '企业用户',
-        value: 'ENTERPRISE',
-      },
-    ],
+    placeholder: '请输入用户名...',
   },
 ]
 export default {
@@ -107,11 +85,12 @@ export default {
   },
   data() {
     return {
+      USERSTATE,
       total: 0,
       list: null,
       listLoading: true,
       searchOptions: {
-        role: '',
+        keyWord: '',
         page: 1,
         perPage: 10,
       },
@@ -130,36 +109,21 @@ export default {
       this.listLoading = true
       var params = _.assign(this.searchOptions, options)
       try {
-        const response = await getList(params)
-        this.list = response.data.items
-        this.total = response.data.total
+        const response = await getUsers(params)
+        this.list = response.data
+        this.total = response.count
         this.listLoading = false
       } catch (error) {
         console.warn(error)
       }
     },
     paginationChanges(options) {
-      debugger
       this.getData(options)
     },
     //定义导出Excel表格事件
     exportExcel() {
-      const tHeader = [
-        'Index',
-        'Title',
-        'Author',
-        'PageViews',
-        'Status',
-        'Display_time',
-      ]
-      const filterVal = [
-        'index',
-        'title',
-        'author',
-        'pageviews',
-        'status',
-        'display_time',
-      ]
+      const tHeader = ['序号', '手机号', '姓名', '授权信息', '创建时间']
+      const filterVal = ['index', 'phone', 'name', 'info', 'create_time']
       const data = this.formatJson(filterVal, this.list)
       import('@/vendor/Export2Excel').then(excel => {
         excel.export_json_to_excel({
@@ -174,7 +138,7 @@ export default {
         _.map(filterVal, j => {
           if (j === 'index') {
             return i + 1
-          } else if (j === 'display_time') {
+          } else if (j === 'create_time') {
             return this.dateFormat(v[j], 'YYYY-MM-DD HH:mm:ss')
           } else {
             return v[j]

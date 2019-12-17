@@ -3,7 +3,12 @@
     <div class="page-header__container">
       <div class="page-header__body">
         <slot></slot>
-        <slot name="right"></slot>
+        <div class="page-header__center">
+          <slot name="center"></slot>
+        </div>
+        <div class="page-header__right">
+          <slot name="right"></slot>
+        </div>
       </div>
     </div>
   </div>
@@ -18,12 +23,16 @@ export default {
 <style lang="scss">
 .page-header {
   background: $--color-white;
-  // padding: 18px 0 18px;
+  margin-bottom: 4px;
+  // box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   &__body {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 10px;
+  }
+  &__right {
+    padding: 10px 0;
   }
 }
 </style>

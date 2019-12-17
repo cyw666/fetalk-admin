@@ -1,9 +1,11 @@
 <template>
-  <div ref="editor"></div>
+  <div ref="editor" class="editor"></div>
 </template>
 
 <script>
 import Quill from 'quill'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.bubble.css'
 import 'quill/dist/quill.snow.css'
 export default {
   name: 'Editor',
@@ -19,6 +21,7 @@ export default {
     },
     height: {
       type: Number,
+      required: true,
     },
     options: {
       type: Object,
@@ -57,6 +60,27 @@ export default {
       },
     }
   },
+  watch: {
+    value: {
+      handler(val) {
+        // 确认是新的值
+        if (val !== this.currentValue) {
+          this.currentValue = val
+          // 尝试更新
+          if (this.Quill) {
+            this.Quill.pasteHTML(this.value)
+          }
+        }
+      },
+      immediate: true,
+    },
+    // Watch disabled change
+    disabled(newVal) {
+      if (this.Quill) {
+        this.Quill.enable(!newVal)
+      }
+    },
+  },
   mounted() {
     this.init()
   },
@@ -75,7 +99,8 @@ export default {
       this.Quill.pasteHTML(this.currentValue)
       this.height && this.setHeight(this.height)
       // 绑定事件
-      this.Quill.on('text-change', (delta, oldDelta, source) => {
+      // this.Quill.on('text-change', (delta, oldDelta, source) => {
+      this.Quill.on('text-change', () => {
         const html = this.$refs.editor.children[0].innerHTML
         const text = this.Quill.getText()
         const quill = this.Quill
@@ -93,6 +118,7 @@ export default {
         } else {
           this.$emit('focus', this.Quill)
         }
+        this.$emit('selection-change', range, oldRange, source)
       })
 
       // Emit ready event
@@ -102,26 +128,85 @@ export default {
       this.Quill.container.style.height = `${height}px`
     },
   },
-  watch: {
-    value: {
-      handler(val) {
-        // 确认是新的值
-        if (val !== this.currentValue) {
-          this.currentValue = val
-          // 尝试更新
-          if (this.Quill) {
-            this.Quill.pasteHTML(this.value)
-          }
-        }
-      },
-      immediate: true,
-    },
-    // Watch disabled change
-    disabled(newVal, oldVal) {
-      if (this.Quill) {
-        this.Quill.enable(!newVal)
-      }
-    },
-  },
 }
 </script>
+
+<style>
+.editor {
+  line-height: normal !important;
+}
+.ql-toolbar.ql-snow {
+  line-height: normal !important;
+}
+.ql-snow .ql-tooltip[data-mode='link']::before {
+  content: '请输入链接地址:';
+}
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+  border-right: 0px;
+  content: '保存';
+  padding-right: 0px;
+}
+
+.ql-snow .ql-tooltip[data-mode='video']::before {
+  content: '请输入视频地址:';
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item::before {
+  content: '14px';
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='small']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='small']::before {
+  content: '10px';
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='large']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='large']::before {
+  content: '18px';
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='huge']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='huge']::before {
+  content: '32px';
+}
+
+.ql-snow .ql-picker.ql-header .ql-picker-label::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item::before {
+  content: '文本';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='1']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='1']::before {
+  content: '标题1';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='2']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='2']::before {
+  content: '标题2';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='3']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='3']::before {
+  content: '标题3';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='4']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='4']::before {
+  content: '标题4';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='5']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='5']::before {
+  content: '标题5';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='6']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='6']::before {
+  content: '标题6';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item::before {
+  content: '标准字体';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='serif']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='serif']::before {
+  content: '衬线字体';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='monospace']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='monospace']::before {
+  content: '等宽字体';
+}
+</style>

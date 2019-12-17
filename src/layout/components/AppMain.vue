@@ -1,10 +1,12 @@
 <template>
   <section class="app-main">
-    <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="cachedViews">
+    <div class="app-main__wrapper">
+      <transition name="fade-transform" mode="out-in">
+        <!-- <keep-alive :include="cachedViews"> -->
         <router-view :key="key" />
-      </keep-alive>
-    </transition>
+        <!-- </keep-alive> -->
+      </transition>
+    </div>
   </section>
 </template>
 
@@ -29,6 +31,10 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
+  background: #f1f2f7;
+  &__wrapper {
+    margin: 10px;
+  }
 }
 
 .fixed-header + .app-main {

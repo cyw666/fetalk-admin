@@ -10,8 +10,8 @@
     </page-header>
     <page-container v-adaptive-table="{ bottomOffset: 10 }">
       <el-form
-        :model="formData"
         ref="ruleForm"
+        :model="formData"
         :rules="rules"
         label-width="100px"
         :hide-required-asterisk="true"

@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+// Vue-Router升级导致的 Uncaught (in promise)问题
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch(err => err)
+}
 Vue.use(Router)
 
 /* Layout */
@@ -17,7 +23,7 @@ import Layout from '@/layout'
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
+    roles: ['ROOT','editor']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
@@ -58,40 +64,18 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
+    hidden: true,
     children: [
       {
         path: 'dashboard',
         name: 'Dashboard',
-        component: () => import('@/views/dashboard/index'),
+        component: () => import('@/views/users-list/index'),
         meta: { title: '首页', icon: 'dashboard' },
       },
     ],
   },
 ]
 export const asyncRoutes = [
-  {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
-    name: 'Permission',
-    meta: {
-      title: 'Permission',
-      icon: 'lock',
-      roles: ['admin', 'editor'], // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: 'Role Permission',
-          roles: ['admin'],
-        },
-      },
-    ],
-  },
   {
     path: '/users',
     component: Layout,
@@ -104,6 +88,28 @@ export const asyncRoutes = [
       },
     ],
   },
+  // {
+  //   path: '/permission',
+  //   component: Layout,
+  //   redirect: '/permission/page',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'Permission',
+  //   meta: {
+  //     title: 'Permission',
+  //     icon: 'lock',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'role',
+  //       component: () => import('@/views/permission/role'),
+  //       name: 'RolePermission',
+  //       meta: {
+  //         title: 'Role Permission',
+  //         icon: 'lock',
+  //       },
+  //     },
+  //   ],
+  // },
   {
     path: '/user-setting',
     component: Layout,
@@ -124,6 +130,27 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: '/shops',
+    component: Layout,
+    redirect: '/shops/shop-categories',
+    alwaysShow: true, // will always show the root menu
+    meta: { title: '商铺管理', icon: 'shangpu' },
+    children: [
+      {
+        path: 'shop-categories',
+        name: 'ShopCategories',
+        component: () => import('@/views/shops/shop-categories/index'),
+        meta: { title: '商铺分类' },
+      },
+      {
+        path: 'shop-list',
+        name: 'ShopList',
+        component: () => import('@/views/shops/shop-list/index'),
+        meta: { title: '商铺列表' },
+      },
+    ],
+  },
+  {
     path: '/introduction',
     component: Layout,
     children: [
@@ -135,13 +162,40 @@ export const asyncRoutes = [
       },
     ],
   },
+  // {
+  //   path: 'external-link',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+  //       meta: { title: 'External Link', icon: 'link' },
+  //     },
+  //   ],
+  // },
   {
-    path: 'external-link',
+    path: '/main-swiper',
     component: Layout,
     children: [
       {
-        path: 'https://github.com/cyw666/fetalk-admin',
-        meta: { title: 'External Link', icon: 'link' },
+        path: 'index',
+        name: 'MainSwiper',
+        component: () => import('@/views/main-swiper/index'),
+        meta: { title: '轮播图', icon: 'lunboxiaoguo' },
+      },
+    ],
+  },
+  {
+    path: '/admin',
+    component: Layout,
+    meta: {
+      roles: ['ROOT'],
+    },
+    children: [
+      {
+        path: 'admin-accounts',
+        name: 'AdminAccounts',
+        component: () => import('@/views/admin-accounts/index'),
+        meta: { title: '管理员列表', icon: 'guanliyuan' },
       },
     ],
   },

@@ -10,7 +10,7 @@
       :hide-required-asterisk="true"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">Tech Panda</h3>
       </div>
 
       <el-form-item prop="username" label="用户名">
@@ -37,7 +37,7 @@
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon
-            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+            :icon-class="passwordType === 'password' ? 'eye-close-pwd' : 'eye'"
           />
         </span>
       </el-form-item>
@@ -55,18 +55,9 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('The password can not be less than 6 digits'))
@@ -76,13 +67,11 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111',
+        username: '',
+        password: '',
       },
       loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername },
-        ],
+        username: [{ required: true, trigger: 'blur' }],
         password: [
           { required: true, trigger: 'blur', validator: validatePassword },
         ],
@@ -172,7 +161,7 @@ $cursor: $--color-text-primary;
       &:-webkit-autofill {
         color: $cursor !important;
         box-shadow: 0 0 0px 1000px $--color-white inset !important;
-        -webkit-text-fill-color: $--color-white !important;
+        -webkit-text-fill-color: $cursor !important;
       }
     }
   }

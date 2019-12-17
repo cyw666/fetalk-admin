@@ -1,8 +1,10 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
-import store from '@/store'
-import { getToken } from '@/utils/token'
-
+import _ from 'lodash'
+import { Message } from 'element-ui'
+// import store from '@/store'
+import { getToken, removeToken } from '@/utils/token'
+import router from '@/router'
+import { deleteEmpty } from '@/utils'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -14,12 +16,16 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-
-    if (store.getters.token) {
+    const accessToken = getToken()
+    let params = _.cloneDeep(config.params)
+    let data = _.cloneDeep(config.data)
+    config.params = deleteEmpty(params)
+    config.data = deleteEmpty(data)
+    if (accessToken) {
       // let each request carry token
-      // ['X-Token'] is a custom headers key
+      // ['Authorization'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      config.headers['Authorization'] = 'Bearer ' + accessToken
     }
     return config
   },
@@ -43,46 +49,35 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    const res = response.data
-
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000,
-      })
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm(
-          'You have been logged out, you can cancel to stay on this page, or log in again',
-          'Confirm logout',
-          {
-            confirmButtonText: 'Re-Login',
-            cancelButtonText: 'Cancel',
-            type: 'warning',
-          }
-        ).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
-      return Promise.reject(new Error(res.message || 'Error'))
-    } else {
-      return res
-    }
+    const { data } = response
+    return Promise.resolve(data)
   },
-  error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000,
-    })
-    return Promise.reject(error)
+  err => {
+    if (err.response) {
+      // Error handler for 401.
+      if (err.response.status === 401) {
+        console.error('Status 401')
+        removeToken()
+        // Redirect to login page or somewhere.
+        router.push('/auth/login')
+      }
+
+      err.response.data =
+        typeof err.response.data === 'object' ? err.response.data : {}
+
+      err.response.data.status = err.response.status
+
+      if (!err.response.data.message) {
+        err.response.data.message = err.response.statusText
+      }
+      Message({
+        message: err.response.data.message,
+        type: 'error',
+      })
+      return Promise.reject(err.response.data)
+    } else {
+      return Promise.reject(err)
+    }
   }
 )
 

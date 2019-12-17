@@ -3,8 +3,8 @@
     <page-container>
       <div class="change-password__wrapper">
         <el-form
-          class="change-password-form"
           ref="changePassword"
+          class="change-password-form"
           :model="formData"
           :rules="ruleValidate"
         >
@@ -42,7 +42,7 @@
 
 <script>
 import _ from 'lodash'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { removeToken } from '@/utils/token'
 
 export default {
@@ -97,12 +97,14 @@ export default {
       userInfo: state => state.user.userInfo,
     }),
     userId() {
-      return this.userInfo.data.id
+      return this.userInfo.id
     },
   },
   created() {},
   methods: {
-    changePassword() {},
+    ...mapActions({
+      changePassword: 'user/changePassword',
+    }),
     resetForm(name) {
       this.$refs[name].resetFields()
     },

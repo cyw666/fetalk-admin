@@ -38,7 +38,7 @@ export default {
     },
     layout: {
       type: String,
-      default: 'total, prev, pager, next',
+      default: 'total, sizes, prev, pager, next',
     },
     background: {
       type: Boolean,

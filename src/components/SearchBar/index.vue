@@ -29,8 +29,11 @@
       <el-select
         v-else-if="form.itemType === 'select'"
         v-model="params[form.modelValue]"
+        :remote="form.remote ? true : false"
+        :remote-method="form.remoteMethod"
         :disabled="form.disabled"
         :placeholder="form.placeholder"
+        filterable
         clearable
         :style="
           itemStyle + (form.itemWidth ? `width: ${form.itemWidth}px;` : '')
@@ -117,6 +120,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 const formProps = {
   showResetBtn: {
     type: Boolean,
@@ -299,7 +303,7 @@ export default {
       }
       if (typeof date === 'string') {
         dates = date.split(' - ')
-      } else if (date && date.hasOwnProperty('length')) {
+      } else if (_.isArray(date) && date) {
         const firstDate = date[0]
         const secondDate = date[1]
         dates = [firstDate, secondDate]

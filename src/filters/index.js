@@ -13,14 +13,18 @@ export function toThousandFilter(num) {
     .replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
 
-export function currencyFormate(num) {
-  if (!num || !_.toNumber(num)) return ''
+export function currencyFormate(num, locales = 'zh-Hans-CN', currency = 'CNY') {
+  // 日本 locales:ja currency:JPY
+  // 美国 locales:US currency:USD
+  if (!num || !_.toNumber(num)) {
+    num = 0
+  }
   if (!_.isNumber(num)) {
     num = _.toNumber(num)
   }
-  return new Intl.NumberFormat('zh-Hans-CN', {
+  return new Intl.NumberFormat(locales, {
     style: 'currency',
-    currency: 'CNY',
+    currency,
   }).format(num)
 }
 

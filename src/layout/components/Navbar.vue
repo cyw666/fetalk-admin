@@ -27,7 +27,7 @@
         trigger="click"
       >
         <div class="avatar-wrapper">
-          {{ name || '用户名' }}
+          {{ nickname || '用户名' }}
 
           <!-- <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" /> -->
           <i class="el-icon-caret-bottom" />
@@ -51,29 +51,29 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-import Search from '@/components/HeaderSearch'
+// import ErrorLog from '@/components/ErrorLog'
+// import Screenfull from '@/components/Screenfull'
+// import SizeSelect from '@/components/SizeSelect'
+// import Search from '@/components/HeaderSearch'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    ErrorLog,
-    Screenfull,
-    SizeSelect,
-    Search,
+    // ErrorLog,
+    // Screenfull,
+    // SizeSelect,
+    // Search,
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'device', 'name']),
+    ...mapGetters(['sidebar', 'avatar', 'device', 'nickname']),
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
+    logout() {
+      this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
   },

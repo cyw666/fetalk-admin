@@ -10,7 +10,7 @@ const name = defaultSettings.title || 'Vue-Admin' // page title
 const port = process.env.port || process.env.npm_config_port || 8080 // dev port
 
 module.exports = {
-  publicPath: '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/admin' : '/',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
@@ -23,14 +23,16 @@ module.exports = {
       errors: true,
     },
     proxy: {
-      // change xxx-api/login => mock/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        target: `http://127.0.0.1:${port}/mock`,
+      '/api': {
+        // target: `http://127.0.0.1:${port}/mock`,
+        // target: `http://192.168.0.105:3000`,
+        target: `http://techpanda.h.test.codesign.me`,
         changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: '',
-        },
+        ws: true,
+        // pathRewrite: {
+        //   ['^' + process.env.VUE_APP_BASE_API]: '',
+        // },
       },
     },
     after: require('./mock/mock-server.js'),

@@ -81,3 +81,125 @@ div:focus {
 .app-container {
   padding: 20px;
 }
+
+.fetalk-table-form {
+  color: $--color-text-primary;
+  font-size: 14px;
+  width: 100%;
+  border: 1px solid $--border-color-light;
+  border-right: none;
+  border-bottom: none;
+  table {
+    width: 100%;
+  }
+  tr {
+    background-color: $--color-white;
+  }
+  td {
+    border-right: 1px solid $--border-color-light;
+    border-bottom: 1px solid $--border-color-light;
+    padding: 12px 5px;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    position: relative;
+    text-align: left;
+    background-color: $--color-white;
+    &.center {
+      text-align: center;
+    }
+    &.left {
+      text-align: left;
+    }
+    &.right {
+      text-align: right;
+    }
+    .el-form-item {
+      margin-bottom: 0;
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+    .el-form-item__content {
+      line-height: 32px;
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+    .el-form-item__error {
+      padding-top: 2px;
+    }
+    .el-input,
+    .el-cascader,
+    .el-select {
+      width: 100%;
+
+      &.is-disabled {
+        .el-input__inner,
+        .el-textarea__inner {
+          border: 1px solid transparent;
+          &:hover,
+          &:focus {
+            border: 1px solid transparent;
+          }
+        }
+      }
+    }
+    .el-input__inner,
+    .el-textarea__inner {
+      border: 1px solid transparent;
+      &:hover {
+        border: 1px solid $--border-color-base;
+      }
+      &:focus {
+        border: 1px solid $--color-primary;
+      }
+      &.is-disabled {
+        border: 1px solid transparent !important;
+      }
+    }
+    .border-input {
+      width: 70%;
+      margin-right: 4px;
+      .el-input__inner {
+        border: solid 1px $--border-color-light;
+        &:hover {
+          border: 1px solid $--border-color-base;
+        }
+        &:focus {
+          border: 1px solid $--color-primary;
+        }
+      }
+    }
+    .upload_img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &.border-form {
+    .el-input__inner,
+    .el-textarea__inner {
+      border: solid 1px $--border-color-light;
+      &:hover {
+        border: 1px solid $--border-color-base;
+      }
+      &:focus {
+        border: 1px solid $--color-primary;
+      }
+    }
+  }
+}
+
+.primary-color {
+  color: $--color-primary;
+}
+.danger-color {
+  color: $--color-danger;
+}
+.success-color {
+  color: $--color-success;
+}
+.warning-color {
+  color:$--color-warning;
+}
