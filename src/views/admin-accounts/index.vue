@@ -35,21 +35,21 @@
           <template slot-scope="{ row }">
             <el-button
               icon="el-icon-edit"
-              @click="openDialog(1, row)"
               size="mini"
               type="primary"
+              @click="openDialog(1, row)"
             ></el-button>
             <el-button
               icon="el-icon-refresh"
-              @click="openDialog(2, row)"
               size="mini"
               type="danger"
+              @click="openDialog(2, row)"
             ></el-button>
             <el-button
               icon="el-icon-delete"
-              @click="deleteClick(row.id)"
               size="mini"
               type="danger"
+              @click="deleteClick(row.id)"
             ></el-button>
           </template>
         </el-table-column>
@@ -63,12 +63,12 @@
       @confirm="submitForm"
     >
       <el-form
+        ref="accountForm"
         :model="formData"
         :rules="rules"
-        ref="accountForm"
         label-width="80px"
       >
-        <el-form-item prop="username" label="用户名称" v-if="dialogType === 0">
+        <el-form-item v-if="dialogType === 0" prop="username" label="用户名称">
           <el-input
             v-model="formData.username"
             type="input"
@@ -76,9 +76,9 @@
           />
         </el-form-item>
         <el-form-item
+          v-if="dialogType === 0 || dialogType === 1"
           prop="nickname"
           label="昵称"
-          v-if="dialogType === 0 || dialogType === 1"
         >
           <el-input
             v-model="formData.nickname"
@@ -87,9 +87,9 @@
           />
         </el-form-item>
         <el-form-item
+          v-if="dialogType === 0 || dialogType === 2"
           prop="password"
           label="密码"
-          v-if="dialogType === 0 || dialogType === 2"
         >
           <el-input
             v-model="formData.password"
@@ -97,7 +97,7 @@
             placeholder="请输入密码"
           />
         </el-form-item>
-        <el-form-item prop="role" label="角色" v-if="dialogType === 0">
+        <el-form-item v-if="dialogType === 0" prop="role" label="角色">
           <el-select v-model="formData.role" placeholder="请选择角色" clearable>
             <el-option
               v-for="item in ADMINROLE"

@@ -48,15 +48,15 @@
           <template slot-scope="{ row }">
             <el-button
               icon="el-icon-edit"
-              @click="openDialog(1, row)"
               size="mini"
               type="primary"
+              @click="openDialog(1, row)"
             ></el-button>
             <el-button
               icon="el-icon-delete"
-              @click="deleteClick(row.id)"
               size="mini"
               type="danger"
+              @click="deleteClick(row.id)"
             ></el-button>
           </template>
         </el-table-column>
@@ -71,9 +71,9 @@
       @confirm="submitForm"
     >
       <el-form
+        ref="shopCategoriesForm"
         :model="formData"
         :rules="rules"
-        ref="shopCategoriesForm"
         label-width="80px"
       >
         <el-form-item prop="name" label="分类名称">
@@ -86,9 +86,9 @@
         <el-form-item prop="url" label="分类图标">
           <single-upload
             v-model="formData.url"
-            @on-success="uploadSuccess"
             fit="fill"
             style="width: 75px; height: 75px"
+            @on-success="uploadSuccess"
           ></single-upload>
         </el-form-item>
       </el-form>

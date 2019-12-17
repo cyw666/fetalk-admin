@@ -47,6 +47,14 @@ export default {
       token: state => state.user.token,
     }),
   },
+  watch: {
+    value: {
+      handler(val) {
+        this.fileList = val
+      },
+      immediate: true,
+    },
+  },
   methods: {
     handleSuccess(res, file, fileList) {
       if (file.status === 'success') {
@@ -70,14 +78,6 @@ export default {
     transformFiles(list) {
       if (!list || list.length <= 0) return []
       return _.map(list, v => v.response)
-    },
-  },
-  watch: {
-    value: {
-      handler(val) {
-        this.fileList = val
-      },
-      immediate: true,
     },
   },
 }

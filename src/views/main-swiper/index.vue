@@ -48,15 +48,15 @@
           <template slot-scope="{ row }">
             <el-button
               icon="el-icon-edit"
-              @click="openDialog(1, row)"
               size="mini"
               type="primary"
+              @click="openDialog(1, row)"
             ></el-button>
             <el-button
               icon="el-icon-delete"
-              @click="deleteClick(row.id)"
               size="mini"
               type="danger"
+              @click="deleteClick(row.id)"
             ></el-button>
           </template>
         </el-table-column>
@@ -71,9 +71,9 @@
       @confirm="submitForm"
     >
       <el-form
+        ref="swiperForm"
         :model="formData"
         :rules="rules"
-        ref="swiperForm"
         label-width="80px"
       >
         <el-form-item prop="targetType" label="目标类型">

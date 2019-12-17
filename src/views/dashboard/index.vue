@@ -26,13 +26,13 @@ export default {
   directives: {
     clipboard,
   },
-  computed: {
-    ...mapGetters(['name']),
-  },
   data() {
     return {
       inputData: 'https://github.com/cyw666/vue-admin-element',
     }
+  },
+  computed: {
+    ...mapGetters(['name']),
   },
   methods: {
     clipboardSuccess() {

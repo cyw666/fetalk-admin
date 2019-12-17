@@ -5,7 +5,7 @@
     :show-close="false"
     :close-on-click-modal="closeBymodal"
     custom-class="confirm-dialog"
-    :top="this.top"
+    :top="top"
   >
     <div slot="title" class="confirm-dialog-header">
       {{ title }}
@@ -39,6 +39,7 @@ export default {
     title: {
       type: String,
       required: false,
+      default: '',
     },
     visible: {
       type: Boolean,
@@ -47,6 +48,7 @@ export default {
     width: {
       type: String,
       required: false,
+      default: '420',
     },
     closeBymodal: {
       type: Boolean,
@@ -71,6 +73,16 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    innserVisible: function(newVal, oldVal) {
+      if (newVal === oldVal) return
+      this.$emit('update:visible', newVal)
+    },
+    visible: function(newVal, oldVal) {
+      if (newVal === oldVal) return
+      this.innserVisible = this.visible
+    },
+  },
   created() {},
   mounted() {},
   methods: {
@@ -80,16 +92,6 @@ export default {
     },
     confirmDialog() {
       this.$emit('confirm')
-    },
-  },
-  watch: {
-    innserVisible: function(newVal, oldVal) {
-      if (newVal === oldVal) return
-      this.$emit('update:visible', newVal)
-    },
-    visible: function(newVal, oldVal) {
-      if (newVal === oldVal) return
-      this.innserVisible = this.visible
     },
   },
 }
