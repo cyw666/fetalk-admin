@@ -88,9 +88,10 @@ const actions = {
       const data = {
         roles: [],
       }
-      if (role) {
-        data.roles.push(role)
-      }
+      data.roles.push('ROOT')
+      // if (role) {
+      //   data.roles.push(role)
+      // }
       commit('SET_ROLES', data.roles)
       resolve(data)
     })

@@ -155,7 +155,7 @@ export default {
     },
   },
   created() {
-    this.getAdminUsers()
+    // this.getAdminUsers()
   },
   methods: {
     ...mapActions({

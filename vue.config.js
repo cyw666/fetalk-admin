@@ -1,6 +1,8 @@
 'use strict'
 const path = require('path')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
+const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 const defaultSettings = require('./src/settings.js')
 
 const resolve = dir => path.join(__dirname, dir)
@@ -23,20 +25,20 @@ module.exports = {
       errors: true,
     },
     proxy: {
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
-      '/api': {
-        // target: `http://127.0.0.1:${port}/mock`,
-        // target: `http://192.168.0.105:3000`,
-        target: `http://techpanda.h.test.codesign.me`,
+      '/api/v1/upload': {
+        target: 'http://oss.test.jianying.run',
         changeOrigin: true,
         ws: true,
-        // pathRewrite: {
-        //   ['^' + process.env.VUE_APP_BASE_API]: '',
-        // },
+      },
+      '/api': {
+        target: 'http://sandu.test.jianying.run',
+        changeOrigin: true,
+        ws: true,
       },
     },
     after: require('./mock/mock-server.js'),
   },
+  transpileDependencies: [/ckeditor5-[^/\\]+[/\\]src[/\\].+\.js$/],
   //默认情况下 babel-loader 会忽略所有 node_modules 中的文件。如果你想要通过 Babel 显式转译一个依赖，可以在这个选项中列出来。
   configureWebpack: config => {
     config.name = name
@@ -46,6 +48,12 @@ module.exports = {
         collections: true,
         shorthands: true,
         chaining: true,
+      })
+    )
+    // CKEditor needs its own plugin to be built using webpack.
+    plugins.push(
+      new CKEditorWebpackPlugin({
+        language: 'zh-cn',
       })
     )
     config.plugins = [...config.plugins, ...plugins]
@@ -61,6 +69,33 @@ module.exports = {
     },
   },
   chainWebpack(config) {
+    // Vue CLI通常使用自己的加载器来加载.svg和.css文件，但是:
+    // CKEditor使用的图标必须使用raw-loader加载，
+    // CKEditor使用的CSS必须使用PostCSS进行转换才能正确加载。
+    config.module
+      .rule('svg')
+      .exclude.add(path.join(__dirname, 'node_modules', '@ckeditor'))
+    // Add an entry for *.svg files belonging to CKEditor.
+    config.module
+      .rule('cke-svg')
+      .test(/ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/)
+      .use('raw-loader')
+      .loader('raw-loader')
+    // (2.) Transpile the .css files imported by the editor using PostCSS.
+    // Make sure only the CSS belonging to ckeditor5-* packages is processed this way.
+    config.module
+      .rule('cke-css')
+      .test(/ckeditor5-[^/\\]+[/\\].+\.css$/)
+      .use('postcss-loader')
+      .loader('postcss-loader')
+      .tap(() => {
+        return styles.getPostCssConfig({
+          themeImporter: {
+            themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
+          },
+          minify: true,
+        })
+      })
     // set svg-sprite-loader
     config.module
       .rule('svg')

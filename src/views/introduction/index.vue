@@ -27,7 +27,11 @@
           <el-input v-model="formData.wechat" placeholder="请填写微信号" />
         </el-form-item>
         <el-form-item label="简介" prop="introduction">
-          <editor v-model="formData.introduction.html" :height="300"></editor>
+          <!-- <editor v-model="formData.introduction.html" :height="300"></editor> -->
+          <ck-editor
+            v-model="formData.introduction.html"
+            :height="300"
+          ></ck-editor>
         </el-form-item>
       </el-form>
     </page-container>
