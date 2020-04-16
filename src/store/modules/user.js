@@ -84,7 +84,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      const role = state.userInfo.role
+      // const role = state.userInfo.role
       const data = {
         roles: [],
       }
