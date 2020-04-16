@@ -1,8 +1,8 @@
 <template>
   <div class="ckeditor">
     <ckeditor
-      :editor="editor"
       v-model="editorData"
+      :editor="editor"
       :config="editorConfig"
       :disabled="disabled"
       @ready="onEditorReady"
